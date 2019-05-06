@@ -3,9 +3,12 @@ import urllib
 from parse_tweets import Parse_Tweets
 
 class Twitter_Feed():
-
+    """Twitter Feed class prompts user for Twitter account to scrape."""
     def __init__(self):
+        """Below, self.pt = Parse_Tweets() connects to the parsing class, rather than using
+        direct instantiation."""
         feed = self.menu()
+        self.pt = Parse_Tweets()
         self.twitterAccountFeed(feed)
 
     def menu(self):
@@ -20,14 +23,17 @@ class Twitter_Feed():
         return feed
 
     def twitterAccountFeed(self, feed):
+        """If we find data, it will be passed to the Parse_Tweets class using the syntax
+        self.pt.parseTweets(html, feed) where pt was defined in this classes __init__ and
+        the value for html is the raw data found when getting the twitter.com feed.  The
+        Feed Name is passed as the paramter 'feed.'"""
         html = urllib.request.urlopen('https://twitter.com/' + feed)
         if html.getcode() == 200 and feed != '':
-            pt = Parse_Tweets(html, feed)
-            pt.parseTweets()
+            self.pt.parseTweets(html, feed)
 
         else:
             print("Invalid Twitter Feed")
             sys.exit(1)
 
-tf = Twitter_Feed()
-tf.menu()
+if __name__ == '__main__':
+    Twitter_Feed().menu()
